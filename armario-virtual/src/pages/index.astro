@@ -1,5 +1,4 @@
 ---
-// Dejamos el arreglo vacio para que no aparezcan prendas iniciales
 const ropaInicial = [];
 ---
 
@@ -74,7 +73,7 @@ const ropaInicial = [];
 
         <div id="seccionCalendario" class="seccion" style="display: none;">
           <h1>Calendario de Outfits</h1>
-          <p>Seleccioná un día para sumar prendas (Marzo 2026)</p>
+          <p>Selecciona un dia para sumar prendas (Marzo 2026)</p>
           <div id="calendarioGrid" class="calendario-grid"></div>
           <div id="formCalendario" class="seccion-carga" style="margin-top: 15px; display: none;">
             <h3 id="diaSeleccionadoTitulo">Dia seleccionado</h3>
@@ -138,7 +137,7 @@ const ropaInicial = [];
     if (id === 'clima') obtenerClima();
   }
 
-  // --- CLIMA ---
+  // CLIMA 
   async function obtenerClima(ciudad = "Buenos Aires") {
     const API_KEY = "1f3703743e3789315f4aa641551fff22";
     const contenedor = document.getElementById("climaInfo");
@@ -160,7 +159,7 @@ const ropaInicial = [];
     if (c) obtenerClima(c);
   }
 
-  // --- CALENDARIO ---
+  // CALENDARIO
   function generarCalendario() {
     const grid = document.getElementById("calendarioGrid");
     if (!grid) return;
@@ -213,7 +212,7 @@ const ropaInicial = [];
     generarCalendario();
   }
 
-  // --- ROPA ---
+  //  ROPA
   function cargarRopa() {
     const g = JSON.parse(localStorage.getItem("misPrendas")) || [];
     g.forEach(p => crearCard(p.nombre, p.etiquetas));
