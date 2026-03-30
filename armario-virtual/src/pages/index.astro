@@ -15,6 +15,8 @@ const ropaInicial = [];
           <li onclick="mostrarSeccion('ropa')">Mi Ropa</li>
           <li onclick="mostrarSeccion('calendario')">Calendario</li>
           <li onclick="mostrarSeccion('clima')">Clima</li>
+          <hr style="border: 0.5px solid #333; margin: 20px 0;">
+          <li onclick="toggleDarkMode()" id="btnTema">Modo Oscuro 🌙</li>
         </ul>
       </nav>
 
@@ -122,6 +124,33 @@ const ropaInicial = [];
   .dia.seleccionado { border: 2px solid #4db8ff; background: #f0faff; }
   .dia-numero { font-weight: bold; font-size: 0.9rem; margin-bottom: 2px; }
   .dia-outfit { font-size: 0.8rem; color: #000; line-height: 1.1; word-break: break-all; }
+  :root {
+  --bg-body: #f4f4f9;
+  --bg-cards: #ffffff;
+  --text-main: #333333;
+  --border-color: #dddddd;
+}
+
+/* Cuando el body tenga la clase .dark-mode, estas variables cambian */
+.dark-mode {
+  --bg-body: #121212;
+  --bg-cards: #1e1e1e;
+  --text-main: #e0e0e0;
+  --border-color: #333333;
+}
+
+body { 
+  background-color: var(--bg-body); 
+  color: var(--text-main); 
+  transition: background 0.3s, color 0.3s; /* Para que el cambio sea suave */
+}
+
+/* Asegurate de que tus secciones y cards usen las variables */
+.seccion-carga, .seccion-filtros, .clima-card, .card, .dia { 
+  background: var(--bg-cards); 
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+}
 </style>
 
 <script is:inline>
@@ -253,4 +282,30 @@ const ropaInicial = [];
   }
 
   window.onload = cargarRopa;
+
+  function toggleDarkMode() {
+  const body = document.body;
+  const btn = document.getElementById("btnTema");
+  
+  // Cambia la clase en el body
+  const isDark = body.classList.toggle("dark-mode");
+  
+  // Guarda la preferencia en el navegador
+  localStorage.setItem("tema", isDark ? "dark" : "light");
+  
+  // Cambia el texto del botón
+  btn.innerText = isDark ? "Modo Claro" : "Modo Oscuro";
+}
+
+// ESTO VA DENTRO DE window.onload o al final del script
+function aplicarTemaGuardado() {
+  const temaGuardado = localStorage.getItem("tema");
+  if (temaGuardado === "dark") {
+    document.body.classList.add("dark-mode");
+    document.getElementById("btnTema").innerText = "Modo Claro";
+  }
+}
+
+// Llamala al cargar
+aplicarTemaGuardado();
 </script>
