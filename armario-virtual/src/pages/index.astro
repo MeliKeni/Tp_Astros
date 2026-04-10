@@ -1,8 +1,9 @@
----
-const ropaInicial = [
-  { nombre: "Remera Oversize", etiquetas: "remera, verano" },
-  { nombre: "Jean Wide Leg", etiquetas: "pantalon, medio tiempo" },
-  { nombre: "Buzo Canguro", etiquetas: "buzo, invierno" }
+--- 
+//Estas lineas son algo de astros, se llama Frontmatter, y sirve para ejecutar algo solo cuando se carga la pagina,
+const ropaInicial = [ //ropa iniciial para que no arranque vacio
+  { nombre: "Camiseta de Argentina", etiquetas: "remera, verano" },
+  { nombre: "Jean Azul", etiquetas: "pantalon, medio tiempo" },
+  { nombre: "Buzo Verde", etiquetas: "buzo, invierno" }
 ];
 ---
 
@@ -13,19 +14,19 @@ const ropaInicial = [
   <body>
     <div class="container">
       
-      <nav class="sidebar">
+      <nav class="sidebar"> <!-- //la barra del costado para poder abrir las secciones-->
         <h2>Armario</h2>
         <ul>
           <li onclick="mostrarSeccion('ropa')">Mi Ropa</li>
           <li onclick="mostrarSeccion('calendario')">Calendario</li>
           <li onclick="mostrarSeccion('clima')">Clima</li>
-          <hr style="border: 0.5px solid #333; margin: 20px 0;">
-          <li onclick="toggleDarkMode()" id="btnTema">Modo Oscuro 🌙</li>
+          <hr style="border: 0.5px solid #333; margin: 20px 0;">    <!--La linea del costado para separar  -->
+          <li onclick="toggleDarkMode()" id="btnTema">Modo Oscuro</li>
         </ul>
       </nav>
 
       <main class="content">
-
+<!-- SECCION ROPA -->
         <div id="seccionRopa" class="seccion">
           <h1>Mi Ropa</h1>
           <section class="seccion-carga">
@@ -70,10 +71,10 @@ const ropaInicial = [
           <div id="ropaContainer" class="ropa-container">
             </div>
         </div>
-
+<!-- SECCION CALENDARIO -->
         <div id="seccionCalendario" class="seccion" style="display: none;">
           <h1>Calendario de Outfits</h1>
-          <p>Selecciona un dia para sumar prendas (Abril 2026)</p>
+          <p>Selecciona un dia para sumar prendas (Marzo 2026)</p>
           <div id="calendarioGrid" class="calendario-grid"></div>
           <div id="formCalendario" class="seccion-carga" style="margin-top: 15px; display: none;">
             <h3 id="diaSeleccionadoTitulo">Dia seleccionado</h3>
@@ -84,7 +85,7 @@ const ropaInicial = [
             </div>
           </div>
         </div>
-
+<!-- SECCION CLIMA -->
         <div id="seccionClima" class="seccion" style="display: none;">
           <h1>Clima</h1>
           <div class="seccion-carga">
@@ -101,7 +102,9 @@ const ropaInicial = [
   </body>
 </html>
 
-<style is:global>
+<!-- DISEÑO -->
+<style is:global> 
+/* De todo */
   :root {
     --bg-body: #f4f4f9;
     --bg-cards: #ffffff;
@@ -154,7 +157,8 @@ const ropaInicial = [
   .dark-mode .prenda-tag-calendario { background-color: #1e3a8a; }
 </style>
 
-<script is:inline>
+<!-- SCRIPT -->
+<script is:inline> 
   let diaSeleccionadoGlobal = null;
 
   function mostrarSeccion(id) {
@@ -295,10 +299,23 @@ const ropaInicial = [
   }
 
   function filtrarRopa() {
-    const b = document.getElementById("buscadorInput").value.toLowerCase();
-    document.querySelectorAll(".card").forEach(c => {
-      const txt = c.innerText.toLowerCase();
-      c.style.display = txt.includes(b) ? "block" : "none";
+    const busqueda = document.getElementById("buscadorInput").value.toLowerCase();
+    const filtroTipo = document.getElementById("filtroTipo").value.toLowerCase();
+    const filtroEstacion = document.getElementById("filtroEstacion").value.toLowerCase();
+
+    document.querySelectorAll(".card").forEach(card => {
+      const nombrePrenda = card.querySelector("h3").innerText.toLowerCase();
+      const etiquetasPrenda = card.querySelector("p").innerText.toLowerCase();
+
+      const coincideNombre = nombrePrenda.includes(busqueda);
+      const coincideTipo = filtroTipo === "todos" || etiquetasPrenda.includes(filtroTipo);
+      const coincideEstacion = filtroEstacion === "todos" || etiquetasPrenda.includes(filtroEstacion);
+
+      if (coincideNombre && coincideTipo && coincideEstacion) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
     });
   }
 
