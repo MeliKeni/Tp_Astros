@@ -1,10 +1,5 @@
 --- 
 //Estas lineas son algo de astros, se llama Frontmatter, y sirve para ejecutar algo solo cuando se carga la pagina,
-const ropaInicial = [ //ropa iniciial para que no arranque vacio
-  { nombre: "Camiseta de Argentina", etiquetas: "remera, verano" },
-  { nombre: "Jean Azul", etiquetas: "pantalon, medio tiempo" },
-  { nombre: "Buzo Verde", etiquetas: "buzo, invierno" }
-];
 ---
 
 <html>
@@ -20,7 +15,7 @@ const ropaInicial = [ //ropa iniciial para que no arranque vacio
           <li onclick="mostrarSeccion('ropa')">Mi Ropa</li>
           <li onclick="mostrarSeccion('calendario')">Calendario</li>
           <li onclick="mostrarSeccion('clima')">Clima</li>
-          <hr style="border: 0.5px solid #333; margin: 20px 0;">    <!--La linea del costado para separar  -->
+          <hr style="border: 0.5px solid #333333; margin: 20px 0;">    <!--La linea del costado para separar  -->
           <li onclick="toggleDarkMode()" id="btnTema">Modo Oscuro</li>
         </ul>
       </nav>
@@ -110,7 +105,7 @@ const ropaInicial = [ //ropa iniciial para que no arranque vacio
     --bg-cards: #ffffff;
     --text-main: #333333;
     --border-color: #dddddd;
-    --accent: #4db8ff;
+    --accent: #a04dff;
   }
 
   .dark-mode {
@@ -118,15 +113,15 @@ const ropaInicial = [ //ropa iniciial para que no arranque vacio
     --bg-cards: #1e1e1e;
     --text-main: #e0e0e0;
     --border-color: #333333;
-    --accent: #1e3a8a;
+    --accent: #681e8a;
   }
 
-  body { margin: 0; font-family: sans-serif; background-color: var(--bg-body); color: var(--text-main); transition: 0.3s; }
+  body { margin: 0; font-family: Verdana ; background-color: var(--bg-body); color: var(--text-main); transition: 0.3s; }
   .container { display: flex; height: 100vh; }
-  .sidebar { width: 220px; background: #1a1a2e; color: white; padding: 30px 20px; flex-shrink: 0; }
+  .sidebar { width: 220px; background: #271a2e; color: white; padding: 30px 20px; flex-shrink: 0; }
   .sidebar ul { list-style: none; padding: 0; }
   .sidebar li { padding: 12px 15px; margin-bottom: 10px; border-radius: 8px; cursor: pointer; }
-  .sidebar li:hover { background: #16213e; }
+  .sidebar li:hover { background: #5c1b70; }
   
   .content { flex: 1; padding: 20px 40px; overflow-y: auto; }
   .seccion-carga, .seccion-filtros, .clima-card, .card, .dia { 
@@ -134,32 +129,49 @@ const ropaInicial = [ //ropa iniciial para que no arranque vacio
     border: 1px solid var(--border-color);
     padding: 15px; border-radius: 12px; margin-bottom: 15px; 
   }
+  input, select, button, h1, h2, h3 {
+    font-family: inherit;}
 
   .form-group { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
   input, select { padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-cards); color: var(--text-main); }
-  button { padding: 8px 15px; background: #4db8ff; border: none; color: white; border-radius: 6px; cursor: pointer; font-weight: bold; }
+  button { padding: 8px 15px; background: #a04dff; border: none; color: white; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
   .ropa-container { display: flex; gap: 15px; flex-wrap: wrap; }
-  .card { width: 160px; border-top: 5px solid #4db8ff; }
+  .card { width: 160px; border-top: 5px solid #a04dff; }
 
   /* ESTILOS CALENDARIO BLOQUES */
   .calendario-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; max-width: 800px; }
   .dia { min-height: 90px; padding: 5px; cursor: pointer; display: flex; flex-direction: column; }
-  .dia.seleccionado { border: 2px solid #4db8ff; }
+  .dia.seleccionado { border: 2px solid #a04dff; }
   .dia-numero { font-weight: bold; font-size: 0.9rem; }
   
   .contenedor-prendas-calendario { display: flex; flex-direction: column; gap: 3px; margin-top: 5px; }
   .prenda-tag-calendario { 
-    background-color: #4db8ff; color: white; font-size: 0.65rem; 
+    background-color: #a04dff; color: white; font-size: 0.65rem; 
     padding: 2px 5px; border-radius: 4px; white-space: nowrap; 
     overflow: hidden; text-overflow: ellipsis; 
   }
-  .dark-mode .prenda-tag-calendario { background-color: #1e3a8a; }
+  .dark-mode .prenda-tag-calendario { background-color: #681e8a; }
 </style>
 
 <!-- SCRIPT -->
 <script is:inline> 
   let diaSeleccionadoGlobal = null;
+
+  function mostrarSeccion(id) { //esta funcion sirve para mostrar las diferentes secciones
+    document.querySelectorAll('.seccion').forEach(s => s.style.display = 'none');
+    const target = document.getElementById('seccion' + id.charAt(0).toUpperCase() + id.slice(1));
+    if (target) target.style.display = 'block';
+    if (id === 'calendario') generarCalendario();
+  }
+
+  // De la seccion "Mi Ropa"
+  ///La funcion cargarRopa sirve para tener prendas que ya te vengan previas antes de usar el armario
+  const ropaInicial = [
+    { nombre: "Camiseta de Argentina", etiquetas: "remera, verano" },
+    { nombre: "Jean Azul", etiquetas: "pantalon, medio tiempo" },
+    { nombre: "Buzo Verde", etiquetas: "buzo, invierno" }
+  ];
 
   function mostrarSeccion(id) {
     document.querySelectorAll('.seccion').forEach(s => s.style.display = 'none');
@@ -168,43 +180,19 @@ const ropaInicial = [ //ropa iniciial para que no arranque vacio
     if (id === 'calendario') generarCalendario();
   }
 
-  // ROPA
+  // --- SECCION ROPA ---
+//funcion para cargar la ropa que tenga guardada y las prerndasd iniciales
   function cargarRopa() {
-    // 1. Buscamos si ya hicimos la "carga inicial" alguna vez
-    const yaSeInicializo = localStorage.getItem("armario_inicializado");
-    let g = JSON.parse(localStorage.getItem("misPrendas")) || [];
-
-    // 2. Si es la primera vez (o si borraste todo), cargamos la semilla
-    if (!yaSeInicializo) {
-      const ropaSemilla = [
-        { nombre: "Remera Oversize", etiquetas: "remera, verano" },
-        { nombre: "Jean Wide Leg", etiquetas: "pantalon, medio tiempo" },
-        { nombre: "Buzo Canguro", etiquetas: "buzo, invierno" }
-      ];
-      
-      // Combinamos lo que haya (por si acaso) con la semilla
-      g = [...g, ...ropaSemilla];
-      
-      localStorage.setItem("misPrendas", JSON.stringify(g));
-      localStorage.setItem("armario_inicializado", "true"); // Marcamos como inicializado
-    }
-
-    // 3. Renderizamos en el HTML
+    const ropaGuardada = JSON.parse(localStorage.getItem("misPrendas")) || [];
+    const todasLasPrendas = [...ropaInicial, ...ropaGuardada];
     const c = document.getElementById("ropaContainer");
     if (c) {
       c.innerHTML = ""; 
-      g.forEach(p => crearCard(p.nombre, p.etiquetas));
+      todasLasPrendas.forEach(p => crearCard(p.nombre, p.etiquetas));
     }
-  } 
-
-  function crearCard(n, e) {
-    const c = document.getElementById("ropaContainer");
-    const d = document.createElement("div");
-    d.classList.add("card");
-    d.innerHTML = `<h3>${n}</h3><p>${e}</p>`;
-    c.appendChild(d);
   }
 
+//funcion para agregar ropa nueva
   function agregarRopa() {
     const n = document.getElementById("nombreInput").value;
     const t = document.getElementById("tipoInput").value;
@@ -217,8 +205,39 @@ const ropaInicial = [ //ropa iniciial para que no arranque vacio
     cargarRopa();
     document.getElementById("nombreInput").value = "";
   }
+  //apartir de ropa agregada la crea en el html
+  function crearCard(n, e) {
+    const c = document.getElementById("ropaContainer");
+    const d = document.createElement("div");
+    d.classList.add("card");
+    d.innerHTML = `<h3>${n}</h3><p>${e}</p>`;
+    c.appendChild(d);
+  }
 
+ //para el buscador 
+  function filtrarRopa() {
+    const busqueda = document.getElementById("buscadorInput").value.toLowerCase();
+    const filtroTipo = document.getElementById("filtroTipo").value.toLowerCase();
+    const filtroEstacion = document.getElementById("filtroEstacion").value.toLowerCase();
+
+    document.querySelectorAll(".card").forEach(card => {
+      const nombrePrenda = card.querySelector("h3").innerText.toLowerCase();
+      const etiquetasPrenda = card.querySelector("p").innerText.toLowerCase();
+
+      const coincideNombre = nombrePrenda.includes(busqueda);
+      const coincideTipo = filtroTipo === "todos" || etiquetasPrenda.includes(filtroTipo);
+      const coincideEstacion = filtroEstacion === "todos" || etiquetasPrenda.includes(filtroEstacion);
+
+      if (coincideNombre && coincideTipo && coincideEstacion) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  }
   // CALENDARIO
+
+  //funcion que crea la grirlla del calendario
   function generarCalendario() {
     const grid = document.getElementById("calendarioGrid");
     grid.innerHTML = "";
@@ -248,16 +267,25 @@ const ropaInicial = [ //ropa iniciial para que no arranque vacio
     }
   }
 
+  //las siguientes dos funciones son las que se ocupan de poder agregar prendas al calendario
   function abrirFormCalendario(dia) {
     const form = document.getElementById("formCalendario");
     const select = document.getElementById("selectRopaCalendario");
-    const ropa = JSON.parse(localStorage.getItem("misPrendas")) || [];
+    
+    // 1. Buscamos la ropa guardada
+    const ropaGuardada = JSON.parse(localStorage.getItem("misPrendas")) || [];
+    // 2. La juntamos con la ropaInicial
+    const todaLaRopa = [...ropaInicial, ...ropaGuardada]; 
+    
     form.style.display = "block";
     document.getElementById("diaSeleccionadoTitulo").innerText = "Ropa para el dia " + dia;
     select.innerHTML = '<option value="">Sumar prenda...</option>';
-    ropa.forEach(p => {
+    
+    // 3. Llenamos el select con la lista completa
+    todaLaRopa.forEach(p => {
       const opt = document.createElement("option");
-      opt.value = p.nombre; opt.innerText = p.nombre;
+      opt.value = p.nombre; 
+      opt.innerText = p.nombre;
       select.appendChild(opt);
     });
   }
@@ -272,6 +300,7 @@ const ropaInicial = [ //ropa iniciial para que no arranque vacio
     generarCalendario();
   }
 
+  //para borrar outfits
   function borrarOutfitDia() {
     let outfits = JSON.parse(localStorage.getItem("outfitsCalendario")) || {};
     delete outfits[diaSeleccionadoGlobal];
@@ -279,7 +308,8 @@ const ropaInicial = [ //ropa iniciial para que no arranque vacio
     generarCalendario();
   }
 
-  // CLIMA (Simplificado)
+  // CLIMA
+  //Funcion que apartir de la api del clima te pone el clima de la ciudad
   async function buscarClima() {
     const ciudad = document.getElementById("ciudadInput").value || "Buenos Aires";
     const API_KEY = "1f3703743e3789315f4aa641551fff22";
@@ -291,33 +321,14 @@ const ropaInicial = [ //ropa iniciial para que no arranque vacio
     } catch { contenedor.innerHTML = "<p>Error al cargar clima</p>"; }
   }
 
-  // TEMA Y FILTROS (Mantenemos tu logica)
+//Modo oscuro
+
   function toggleDarkMode() {
     const isDark = document.body.classList.toggle("dark-mode");
     localStorage.setItem("tema", isDark ? "dark" : "light");
     document.getElementById("btnTema").innerText = isDark ? "Modo Claro" : "Modo Oscuro";
   }
 
-  function filtrarRopa() {
-    const busqueda = document.getElementById("buscadorInput").value.toLowerCase();
-    const filtroTipo = document.getElementById("filtroTipo").value.toLowerCase();
-    const filtroEstacion = document.getElementById("filtroEstacion").value.toLowerCase();
-
-    document.querySelectorAll(".card").forEach(card => {
-      const nombrePrenda = card.querySelector("h3").innerText.toLowerCase();
-      const etiquetasPrenda = card.querySelector("p").innerText.toLowerCase();
-
-      const coincideNombre = nombrePrenda.includes(busqueda);
-      const coincideTipo = filtroTipo === "todos" || etiquetasPrenda.includes(filtroTipo);
-      const coincideEstacion = filtroEstacion === "todos" || etiquetasPrenda.includes(filtroEstacion);
-
-      if (coincideNombre && coincideTipo && coincideEstacion) {
-        card.style.display = "block";
-      } else {
-        card.style.display = "none";
-      }
-    });
-  }
 
   // Carga inicial
   window.onload = () => {
