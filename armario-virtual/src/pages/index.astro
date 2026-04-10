@@ -1,5 +1,9 @@
 ---
-const ropaInicial = [];
+const ropaInicial = [
+  { nombre: "Remera Oversize", etiquetas: "remera, verano" },
+  { nombre: "Jean Wide Leg", etiquetas: "pantalon, medio tiempo" },
+  { nombre: "Buzo Canguro", etiquetas: "buzo, invierno" }
+];
 ---
 
 <html>
@@ -64,18 +68,12 @@ const ropaInicial = [];
           </section>
 
           <div id="ropaContainer" class="ropa-container">
-            {ropaInicial.map(prenda => (
-              <div class="card">
-                <h3>{prenda.nombre}</h3>
-                <p>{prenda.etiquetas}</p>
-              </div>
-            ))}
-          </div>
+            </div>
         </div>
 
         <div id="seccionCalendario" class="seccion" style="display: none;">
           <h1>Calendario de Outfits</h1>
-          <p>Selecciona un dia para sumar prendas (Marzo 2026)</p>
+          <p>Selecciona un dia para sumar prendas (Abril 2026)</p>
           <div id="calendarioGrid" class="calendario-grid"></div>
           <div id="formCalendario" class="seccion-carga" style="margin-top: 15px; display: none;">
             <h3 id="diaSeleccionadoTitulo">Dia seleccionado</h3>
@@ -104,105 +102,142 @@ const ropaInicial = [];
 </html>
 
 <style is:global>
-  body { margin: 0; font-family: sans-serif; background-color: #f4f4f9; color: #333; }
+  :root {
+    --bg-body: #f4f4f9;
+    --bg-cards: #ffffff;
+    --text-main: #333333;
+    --border-color: #dddddd;
+    --accent: #4db8ff;
+  }
+
+  .dark-mode {
+    --bg-body: #121212;
+    --bg-cards: #1e1e1e;
+    --text-main: #e0e0e0;
+    --border-color: #333333;
+    --accent: #1e3a8a;
+  }
+
+  body { margin: 0; font-family: sans-serif; background-color: var(--bg-body); color: var(--text-main); transition: 0.3s; }
   .container { display: flex; height: 100vh; }
   .sidebar { width: 220px; background: #1a1a2e; color: white; padding: 30px 20px; flex-shrink: 0; }
-  .sidebar h2 { margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 10px; }
   .sidebar ul { list-style: none; padding: 0; }
   .sidebar li { padding: 12px 15px; margin-bottom: 10px; border-radius: 8px; cursor: pointer; }
   .sidebar li:hover { background: #16213e; }
+  
   .content { flex: 1; padding: 20px 40px; overflow-y: auto; }
-  .seccion-carga, .seccion-filtros, .clima-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  .seccion-carga, .seccion-filtros, .clima-card, .card, .dia { 
+    background: var(--bg-cards); 
+    border: 1px solid var(--border-color);
+    padding: 15px; border-radius: 12px; margin-bottom: 15px; 
+  }
+
   .form-group { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-  input, select { padding: 8px; border: 1px solid #ddd; border-radius: 6px; }
+  input, select { padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-cards); color: var(--text-main); }
   button { padding: 8px 15px; background: #4db8ff; border: none; color: white; border-radius: 6px; cursor: pointer; font-weight: bold; }
+
   .ropa-container { display: flex; gap: 15px; flex-wrap: wrap; }
-  .card { background: white; padding: 15px; border-radius: 12px; width: 160px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #4db8ff; }
-  .temp { font-size: 2.5rem; font-weight: bold; color: #4db8ff; }
-  .calendario-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; background: white; padding: 10px; border-radius: 12px; max-width: 800px; }
-  .dia { min-height: 60px; border: 1px solid #eee; border-radius: 6px; padding: 5px; cursor: pointer; background: #fff; display: flex; flex-direction: column; }
-  .dia.seleccionado { border: 2px solid #4db8ff; background: #f0faff; }
-  .dia-numero { font-weight: bold; font-size: 0.9rem; margin-bottom: 2px; }
-  .dia-outfit { font-size: 0.8rem; color: #000; line-height: 1.1; word-break: break-all; }
-  :root {
-  --bg-body: #f4f4f9;
-  --bg-cards: #ffffff;
-  --text-main: #333333;
-  --border-color: #dddddd;
-}
+  .card { width: 160px; border-top: 5px solid #4db8ff; }
 
-/* Cuando el body tenga la clase .dark-mode, estas variables cambian */
-.dark-mode {
-  --bg-body: #121212;
-  --bg-cards: #1e1e1e;
-  --text-main: #e0e0e0;
-  --border-color: #333333;
-}
-
-body { 
-  background-color: var(--bg-body); 
-  color: var(--text-main); 
-  transition: background 0.3s, color 0.3s; /* Para que el cambio sea suave */
-}
-
-/* Asegurate de que tus secciones y cards usen las variables */
-.seccion-carga, .seccion-filtros, .clima-card, .card, .dia { 
-  background: var(--bg-cards); 
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
-}
+  /* ESTILOS CALENDARIO BLOQUES */
+  .calendario-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; max-width: 800px; }
+  .dia { min-height: 90px; padding: 5px; cursor: pointer; display: flex; flex-direction: column; }
+  .dia.seleccionado { border: 2px solid #4db8ff; }
+  .dia-numero { font-weight: bold; font-size: 0.9rem; }
+  
+  .contenedor-prendas-calendario { display: flex; flex-direction: column; gap: 3px; margin-top: 5px; }
+  .prenda-tag-calendario { 
+    background-color: #4db8ff; color: white; font-size: 0.65rem; 
+    padding: 2px 5px; border-radius: 4px; white-space: nowrap; 
+    overflow: hidden; text-overflow: ellipsis; 
+  }
+  .dark-mode .prenda-tag-calendario { background-color: #1e3a8a; }
 </style>
 
 <script is:inline>
   let diaSeleccionadoGlobal = null;
 
   function mostrarSeccion(id) {
-    document.getElementById('seccionRopa').style.display = 'none';
-    document.getElementById('seccionCalendario').style.display = 'none';
-    document.getElementById('seccionClima').style.display = 'none';
+    document.querySelectorAll('.seccion').forEach(s => s.style.display = 'none');
     const target = document.getElementById('seccion' + id.charAt(0).toUpperCase() + id.slice(1));
     if (target) target.style.display = 'block';
     if (id === 'calendario') generarCalendario();
-    if (id === 'clima') obtenerClima();
   }
 
-  // CLIMA 
-  async function obtenerClima(ciudad = "Buenos Aires") {
-    const API_KEY = "1f3703743e3789315f4aa641551fff22";
-    const contenedor = document.getElementById("climaInfo");
-    try {
-      const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(ciudad)}&appid=${API_KEY}&units=metric&lang=es`);
-      const data = await res.json();
-      if (data.cod === 200) {
-        contenedor.innerHTML = `<h3>${data.name}</h3><p class="temp">${Math.round(data.main.temp)}°C</p><p>${data.weather[0].description}</p>`;
-      } else {
-        contenedor.innerHTML = `<p>Error: ${data.message}</p>`;
-      }
-    } catch (e) {
-      contenedor.innerHTML = "<p>Error de conexion</p>";
+  // ROPA
+  function cargarRopa() {
+    // 1. Buscamos si ya hicimos la "carga inicial" alguna vez
+    const yaSeInicializo = localStorage.getItem("armario_inicializado");
+    let g = JSON.parse(localStorage.getItem("misPrendas")) || [];
+
+    // 2. Si es la primera vez (o si borraste todo), cargamos la semilla
+    if (!yaSeInicializo) {
+      const ropaSemilla = [
+        { nombre: "Remera Oversize", etiquetas: "remera, verano" },
+        { nombre: "Jean Wide Leg", etiquetas: "pantalon, medio tiempo" },
+        { nombre: "Buzo Canguro", etiquetas: "buzo, invierno" }
+      ];
+      
+      // Combinamos lo que haya (por si acaso) con la semilla
+      g = [...g, ...ropaSemilla];
+      
+      localStorage.setItem("misPrendas", JSON.stringify(g));
+      localStorage.setItem("armario_inicializado", "true"); // Marcamos como inicializado
     }
+
+    // 3. Renderizamos en el HTML
+    const c = document.getElementById("ropaContainer");
+    if (c) {
+      c.innerHTML = ""; 
+      g.forEach(p => crearCard(p.nombre, p.etiquetas));
+    }
+  } 
+
+  function crearCard(n, e) {
+    const c = document.getElementById("ropaContainer");
+    const d = document.createElement("div");
+    d.classList.add("card");
+    d.innerHTML = `<h3>${n}</h3><p>${e}</p>`;
+    c.appendChild(d);
   }
 
-  function buscarClima() {
-    const c = document.getElementById("ciudadInput").value;
-    if (c) obtenerClima(c);
+  function agregarRopa() {
+    const n = document.getElementById("nombreInput").value;
+    const t = document.getElementById("tipoInput").value;
+    const e = document.getElementById("estacionInput").value;
+    if (!n || !t || !e) return;
+    const ets = `${t}, ${e}`;
+    const g = JSON.parse(localStorage.getItem("misPrendas")) || [];
+    g.push({ nombre: n, etiquetas: ets });
+    localStorage.setItem("misPrendas", JSON.stringify(g));
+    cargarRopa();
+    document.getElementById("nombreInput").value = "";
   }
 
   // CALENDARIO
   function generarCalendario() {
     const grid = document.getElementById("calendarioGrid");
-    if (!grid) return;
     grid.innerHTML = "";
     const outfits = JSON.parse(localStorage.getItem("outfitsCalendario")) || {};
-    for (let i = 1; i <= 31; i++) {
+    
+    for (let i = 1; i <= 30; i++) {
       const div = document.createElement("div");
       div.classList.add("dia");
       if (diaSeleccionadoGlobal === i) div.classList.add("seleccionado");
-      let textoPrendas = Array.isArray(outfits[i]) ? outfits[i].join(", ") : (outfits[i] || "");
-      div.innerHTML = `<span class="dia-numero">${i}</span><span class="dia-outfit">${textoPrendas}</span>`;
+
+      let htmlPrendas = "";
+      if (outfits[i] && Array.isArray(outfits[i])) {
+        htmlPrendas = outfits[i].map(p => `<div class="prenda-tag-calendario">${p}</div>`).join("");
+      }
+
+      div.innerHTML = `
+        <span class="dia-numero">${i}</span>
+        <div class="contenedor-prendas-calendario">${htmlPrendas}</div>
+      `;
+      
       div.onclick = () => {
         diaSeleccionadoGlobal = i;
-        generarCalendario(); 
+        generarCalendario();
         abrirFormCalendario(i);
       };
       grid.appendChild(div);
@@ -227,85 +262,49 @@ body {
     const prenda = document.getElementById("selectRopaCalendario").value;
     if (!prenda || !diaSeleccionadoGlobal) return;
     let outfits = JSON.parse(localStorage.getItem("outfitsCalendario")) || {};
-    if (!Array.isArray(outfits[diaSeleccionadoGlobal])) outfits[diaSeleccionadoGlobal] = [];
+    if (!outfits[diaSeleccionadoGlobal]) outfits[diaSeleccionadoGlobal] = [];
     if (!outfits[diaSeleccionadoGlobal].includes(prenda)) outfits[diaSeleccionadoGlobal].push(prenda);
     localStorage.setItem("outfitsCalendario", JSON.stringify(outfits));
     generarCalendario();
   }
 
   function borrarOutfitDia() {
-    if (!diaSeleccionadoGlobal) return;
     let outfits = JSON.parse(localStorage.getItem("outfitsCalendario")) || {};
     delete outfits[diaSeleccionadoGlobal];
     localStorage.setItem("outfitsCalendario", JSON.stringify(outfits));
     generarCalendario();
   }
 
-  //  ROPA
-  function cargarRopa() {
-    const g = JSON.parse(localStorage.getItem("misPrendas")) || [];
-    g.forEach(p => crearCard(p.nombre, p.etiquetas));
+  // CLIMA (Simplificado)
+  async function buscarClima() {
+    const ciudad = document.getElementById("ciudadInput").value || "Buenos Aires";
+    const API_KEY = "1f3703743e3789315f4aa641551fff22";
+    const contenedor = document.getElementById("climaInfo");
+    try {
+      const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${ciudad}&appid=${API_KEY}&units=metric&lang=es`);
+      const data = await res.json();
+      contenedor.innerHTML = `<h3>${data.name}</h3><p class="temp">${Math.round(data.main.temp)}°C</p><p>${data.weather[0].description}</p>`;
+    } catch { contenedor.innerHTML = "<p>Error al cargar clima</p>"; }
   }
 
-  function crearCard(n, e) {
-    const c = document.getElementById("ropaContainer");
-    if (!c) return;
-    const d = document.createElement("div");
-    d.classList.add("card");
-    d.innerHTML = `<h3>${n}</h3><p>${e}</p>`;
-    c.appendChild(d);
-  }
-
-  function agregarRopa() {
-    const n = document.getElementById("nombreInput").value;
-    const t = document.getElementById("tipoInput").value;
-    const e = document.getElementById("estacionInput").value;
-    if (!n || !t || !e) return;
-    const ets = `${t}, ${e}`;
-    crearCard(n, ets);
-    const g = JSON.parse(localStorage.getItem("misPrendas")) || [];
-    g.push({ nombre: n, etiquetas: ets });
-    localStorage.setItem("misPrendas", JSON.stringify(g));
-    document.getElementById("nombreInput").value = "";
+  // TEMA Y FILTROS (Mantenemos tu logica)
+  function toggleDarkMode() {
+    const isDark = document.body.classList.toggle("dark-mode");
+    localStorage.setItem("tema", isDark ? "dark" : "light");
+    document.getElementById("btnTema").innerText = isDark ? "Modo Claro" : "Modo Oscuro";
   }
 
   function filtrarRopa() {
     const b = document.getElementById("buscadorInput").value.toLowerCase();
-    const tF = document.getElementById("filtroTipo").value;
-    const eF = document.getElementById("filtroEstacion").value;
     document.querySelectorAll(".card").forEach(c => {
-      const n = c.querySelector("h3").innerText.toLowerCase();
-      const e = c.querySelector("p").innerText.toLowerCase();
-      const coincide = n.includes(b) && (tF === "todos" || e.includes(tF)) && (eF === "todos" || e.includes(eF));
-      c.style.display = coincide ? "block" : "none";
+      const txt = c.innerText.toLowerCase();
+      c.style.display = txt.includes(b) ? "block" : "none";
     });
   }
 
-  window.onload = cargarRopa;
-
-  function toggleDarkMode() {
-  const body = document.body;
-  const btn = document.getElementById("btnTema");
-  
-  // Cambia la clase en el body
-  const isDark = body.classList.toggle("dark-mode");
-  
-  // Guarda la preferencia en el navegador
-  localStorage.setItem("tema", isDark ? "dark" : "light");
-  
-  // Cambia el texto del botón
-  btn.innerText = isDark ? "Modo Claro" : "Modo Oscuro";
-}
-
-// ESTO VA DENTRO DE window.onload o al final del script
-function aplicarTemaGuardado() {
-  const temaGuardado = localStorage.getItem("tema");
-  if (temaGuardado === "dark") {
-    document.body.classList.add("dark-mode");
-    document.getElementById("btnTema").innerText = "Modo Claro";
-  }
-}
-
-// Llamala al cargar
-aplicarTemaGuardado();
+  // Carga inicial
+  window.onload = () => {
+    cargarRopa();
+    if (localStorage.getItem("tema") === "dark") toggleDarkMode();
+  };
 </script>
